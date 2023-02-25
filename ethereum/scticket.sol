@@ -44,12 +44,13 @@ contract TickenEvent is ERC721, Pausable, Ownable {
         _unpause();
     }
 
-    function safeMint(address to, string memory section) public whenNotPaused onlyOwner {
-        uint256 tokenId = _tokenIdCounter.current();
-
-        _tokenIdCounter.increment();
+    function safeMint(address to, string memory section, uint256 tokenId) public whenNotPaused onlyOwner {
+        // Check if tokenID already exists
+        require(!_exists(tokenId), "Token ID already exists");
 
         _safeMint(to, tokenId);
+
+        _tokenIdCounter.increment();
 
         _tickets[tokenId] = Ticket(section, false);
 
