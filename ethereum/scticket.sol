@@ -8,6 +8,7 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 
     struct Ticket {
+        address owner;
         string  section;
         bool    scanned;
     }
@@ -16,7 +17,9 @@ import "@openzeppelin/contracts/utils/Counters.sol";
         uint256 tokenID;
         string  section;
         bool    scanned;
+        address ownerAddr;
     }
+
 
 contract TickenEvent is ERC721, Pausable, Ownable {
     event TicketCreated(address ownerAddress, uint256 indexed tokenID, string section);
@@ -34,7 +37,14 @@ contract TickenEvent is ERC721, Pausable, Ownable {
     // Mapping from section to tokenIDs
     mapping(string => uint256[]) private _sectionTokens;
 
+    // List of all minted tokenIDs
+    uint256[] private _allTokens;
+
     constructor() ERC721("TickenEvent", "TE") {}
+
+    function toDTO(Ticket memory ticket, uint256 tokenID) private pure returns (TicketDTO memory) {
+        return TicketDTO(tokenID, ticket.section, ticket.scanned, ticket.owner);
+    }
 
     function pause() public onlyOwner {
         _pause();
@@ -52,11 +62,13 @@ contract TickenEvent is ERC721, Pausable, Ownable {
 
         _tokenIdCounter.increment();
 
-        _tickets[tokenId] = Ticket(section, false);
+        _tickets[tokenId] = Ticket(to, section, false);
 
         _ownedTokens[to].push(tokenId);
 
         _sectionTokens[section].push(tokenId);
+
+        _allTokens.push(tokenId);
 
         emit TicketCreated(to, tokenId, section);
     }
@@ -68,7 +80,7 @@ contract TickenEvent is ERC721, Pausable, Ownable {
         for (uint256 i = 0; i < tokenIds.length; i++) {
             uint256 tokenId = tokenIds[i];
             Ticket memory ticket = _tickets[tokenId];
-            tickets[i] = TicketDTO(tokenId, ticket.section, ticket.scanned);
+            tickets[i] = toDTO(ticket, tokenId);
         }
         return tickets;
     }
@@ -87,8 +99,9 @@ contract TickenEvent is ERC721, Pausable, Ownable {
         uint256 totalSupply = _tokenIdCounter.current();
         TicketDTO[] memory tickets = new TicketDTO[](totalSupply);
         for (uint256 i = 0; i < totalSupply; i++) {
-            Ticket memory ticket = _tickets[i];
-            tickets[i] = TicketDTO(i, ticket.section, ticket.scanned);
+            uint256 tokenId = _allTokens[i];
+            Ticket memory ticket = _tickets[tokenId];
+            tickets[i] = toDTO(ticket, tokenId);
         }
         return tickets;
     }
@@ -99,7 +112,7 @@ contract TickenEvent is ERC721, Pausable, Ownable {
         for (uint256 i = 0; i < tokenIds.length; i++) {
             uint256 tokenId = tokenIds[i];
             Ticket memory ticket = _tickets[tokenId];
-            tickets[i] = TicketDTO(tokenId, ticket.section, ticket.scanned);
+            tickets[i] = toDTO(ticket, tokenId);
         }
         return tickets;
     }
