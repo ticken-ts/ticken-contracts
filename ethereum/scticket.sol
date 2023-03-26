@@ -10,13 +10,11 @@ import "@openzeppelin/contracts/utils/Counters.sol";
     struct Ticket {
         address owner;
         string  section;
-        bool    scanned;
     }
 
     struct TicketDTO {
         uint256 tokenID;
         string  section;
-        bool    scanned;
         address ownerAddr;
     }
 
@@ -43,7 +41,7 @@ contract TickenEvent is ERC721, Pausable, Ownable {
     constructor() ERC721("TickenEvent", "TE") {}
 
     function toDTO(Ticket memory ticket, uint256 tokenID) private pure returns (TicketDTO memory) {
-        return TicketDTO(tokenID, ticket.section, ticket.scanned, ticket.owner);
+        return TicketDTO(tokenID, ticket.section, ticket.owner);
     }
 
     function pause() public onlyOwner {
@@ -85,14 +83,10 @@ contract TickenEvent is ERC721, Pausable, Ownable {
         return tickets;
     }
 
-    function scanTicket(uint256 tokenId) public whenNotPaused onlyOwner {
-        require(_exists(tokenId), "ERC721: operator query for nonexistent token");
-        _tickets[tokenId].scanned = true;
-    }
-
     function getTicket(uint256 tokenId) public view returns (TicketDTO memory) {
         require(_exists(tokenId), "ERC721: operator query for nonexistent token");
-        return toDTO(_tickets[tokenId], tokenId);
+        Ticket memory ticket = _tickets[tokenId];
+        return toDTO(ticket, tokenId);
     }
 
     function getAllTickets() public view onlyOwner returns (TicketDTO[] memory) {
