@@ -60,7 +60,7 @@ contract TickenEvent is ERC721, Pausable, Ownable {
 
         _tokenIdCounter.increment();
 
-        _tickets[tokenId] = Ticket(to, section, false);
+        _tickets[tokenId] = Ticket(to, section);
 
         _ownedTokens[to].push(tokenId);
 
