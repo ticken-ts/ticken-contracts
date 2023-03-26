@@ -90,9 +90,9 @@ contract TickenEvent is ERC721, Pausable, Ownable {
         _tickets[tokenId].scanned = true;
     }
 
-    function getTicket(uint256 tokenId) public view returns (Ticket memory) {
+    function getTicket(uint256 tokenId) public view returns (TicketDTO memory) {
         require(_exists(tokenId), "ERC721: operator query for nonexistent token");
-        return _tickets[tokenId];
+        return toDTO(_tickets[tokenId], tokenId);
     }
 
     function getAllTickets() public view onlyOwner returns (TicketDTO[] memory) {
