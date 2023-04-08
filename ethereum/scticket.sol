@@ -111,6 +111,28 @@ contract TickenEvent is ERC721, Pausable, Ownable {
         return tickets;
     }
 
+    function transferTicket(address from, address to, uint256 tokenId) public onlyOwner {
+        super._transfer(from, to, tokenId);
+
+        // remove from old owner
+        uint256 indexOfToken;
+        bool found = false;
+        for (uint256 i = 0; i < _ownedTokens[from].length; i++) {
+            if (_ownedTokens[from][i] == tokenId) {
+                indexOfToken = i;
+                found = true;
+                break;
+            }
+        }
+
+        if (!found) revert("Token not found");
+
+        delete _ownedTokens[from][indexOfToken];
+
+        // add to new owner
+        _ownedTokens[to].push(tokenId);
+    }
+
     function _beforeTokenTransfer(address from, address to, uint256 tokenId, uint256 batchSize)
     internal
     whenNotPaused
