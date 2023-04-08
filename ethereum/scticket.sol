@@ -131,6 +131,9 @@ contract TickenEvent is ERC721, Pausable, Ownable {
 
         // add to new owner
         _ownedTokens[to].push(tokenId);
+
+        // update ticket owner
+        _tickets[tokenId].owner = to;
     }
 
     function _beforeTokenTransfer(address from, address to, uint256 tokenId, uint256 batchSize)
