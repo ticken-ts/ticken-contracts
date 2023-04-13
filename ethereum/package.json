@@ -1,9 +1,25 @@
 {
-  "dependencies": {
-    "@openzeppelin/contracts": "^4.8.1"
-  },
+  "name": "sc-event",
+  "version": "2.0.0",
+  "description": "Smart contract template ",
+  "main": "index.js",
   "scripts": {
-    "abigen": "abigen --abi build/TickenEvent.abi --pkg public_blockchain --type TickenEvent --out scticket.go --bin build/TickenEvent.bin",
-    "build": "solc --overwrite --base-path node_modules --bin --abi scticket.sol -o build"
+    "test": "./scripts/test.sh",
+    "test-debug": "./scripts/test.sh --debug",
+    "lint-sc": "solium -d contracts/",
+    "build": "truffle compile",
+    "ganache": "ganache-cli --deterministic"
+  },
+  "dependencies": {
+    "@openzeppelin/contracts": "^4.8.2",
+    "openzeppelin-solidity": "^3.4.2",
+    "truffle": "^5.8.1"
+  },
+  "devDependencies": {
+    "bn-chai": "^1.0.1",
+    "chai": "^4.3.7",
+    "ethlint": "^1.2.5",
+    "ganache-cli": "^6.12.2",
+    "openzeppelin-test-helpers": "^0.5.1"
   }
 }
