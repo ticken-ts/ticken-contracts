@@ -7,7 +7,7 @@ import "../node_modules/@openzeppelin/contracts/security/Pausable.sol";
 import "../node_modules/@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 
 contract TickenEvent is ERC721Enumerable, Pausable, Ownable {
-    /************************* TICKET ************************/
+    /************************* Ticket ************************/
     struct Ticket {
         address owner;
         Status status;
@@ -22,7 +22,7 @@ contract TickenEvent is ERC721Enumerable, Pausable, Ownable {
         ISSUED,
 
         // TicketStatusScanned represents the state of the
-	    // ticket after it is "scanned". Important that this
+        // ticket after it is "scanned". Important that this
         // is not  done in the same moment the scanning occurs,
         // this state is done on batch
         SCANNED,
@@ -34,24 +34,23 @@ contract TickenEvent is ERC721Enumerable, Pausable, Ownable {
     }
     /*********************************************************/
 
-    /******************** Event State ************************/ 
+    /******************** Event State ************************/
     // this variable indicates if the event is currently with
     // tickets on sale ("anchored") or not. While the event is
-    // anchored, all tickets can only be traded by Ticken 
+    // anchored, all tickets can only be traded by Ticken
     // (contract owner) or using the sell/buy ticket methods.
     // When the event becomes not anchored, all tickets are
     // free to be traded as NFT's
     bool private _anchored;
     /*********************************************************/
 
+    /********************* Chain Events **********************/
+    event TicketMinted(address owner, string section, uint256 indexed tokenID);
+    event TicketTransferred(address from, address to, uint256 indexed tokenID);
+    /*********************************************************/
 
-    event TicketCreated(address ownerAddress, uint256 indexed tokenID, string section);
-
+    /**************** Mappings & Counters ********************/
     using Counters for Counters.Counter;
-    Counters.Counter private _tokenIdCounter;
-
-    // List of all minted tokenIDs
-    uint256[] private _allTokens;
 
     // Mapping from token ID to tickets
     mapping(uint256 => Ticket) public tickets;
@@ -59,8 +58,13 @@ contract TickenEvent is ERC721Enumerable, Pausable, Ownable {
     // Mapping from section to tokenIDs
     mapping(string => uint256[]) private _ticketsBySection;
 
+    // Count the number of tickets issued
+    Counters.Counter private _ticketsCounter;
+    /*********************************************************/
+
+
     constructor() ERC721("TickenEvent", "TE") {
-        _anchored = true; 
+        _anchored = true;
     }
 
     /*********************************************************
@@ -88,7 +92,7 @@ contract TickenEvent is ERC721Enumerable, Pausable, Ownable {
      * return: uint
      *********************************************************/
     function totalTickets() public view returns (uint count) {
-        return _allTokens.length;
+        return _ticketsCounter.current();
     }
 
     /*********************************************************
@@ -112,16 +116,16 @@ contract TickenEvent is ERC721Enumerable, Pausable, Ownable {
         _safeMint(to, tokenID);
 
         tickets[tokenID] = Ticket({
-            owner: to,
-            section: section,
-            tokenID: tokenID,
-            status: Status.ISSUED
+        owner: to,
+        section: section,
+        tokenID: tokenID,
+        status: Status.ISSUED
         });
 
-        _allTokens.push(tokenID);
+        _ticketsCounter.increment();
         _ticketsBySection[section].push(tokenID);
 
-        emit TicketCreated(to, tokenID, section);
+        emit TicketMinted(to, section, tokenID);
     }
 
     /*********************************************************
@@ -139,7 +143,7 @@ contract TickenEvent is ERC721Enumerable, Pausable, Ownable {
      *********************************************************/
     function transferTicket(address from, address to, uint256 tokenID) public whenNotPaused {
         // we are going to restric this method only
-        // for the contract owners (Ticken) while the 
+        // for the contract owners (Ticken) while the
         // tickets are avaiable to buy. After that, this
         // method becomes free to every user to tranfer
         // their tickets as NFTs
@@ -149,8 +153,10 @@ contract TickenEvent is ERC721Enumerable, Pausable, Ownable {
         } else {
             safeTransferFrom(from, to, tokenID);
         }
-       
-        tickets[tokenID].owner = to;       
+
+        tickets[tokenID].owner = to;
+
+        emit TicketTransferred(from, to, tokenID);
     }
 
     /*********************************************************
@@ -193,27 +199,5 @@ contract TickenEvent is ERC721Enumerable, Pausable, Ownable {
         }
 
         return _tickets;
-    }
-
-
-
-
-
-    function _beforeTokenTransfer(
-        address from,
-        address to,
-        uint256 tokenId,
-        uint256 batchSize
-    ) internal override whenNotPaused {
-        super._beforeTokenTransfer(from, to, tokenId, batchSize);
-    }
-
-
-    function pause() public onlyOwner {
-        _pause();
-    }
-
-    function unpause() public onlyOwner {
-        _unpause();
     }
 }
