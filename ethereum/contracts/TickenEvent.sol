@@ -160,6 +160,18 @@ contract TickenEvent is ERC721Enumerable, Pausable, Ownable {
     }
 
 
+    function scanBatch(uint256[] calldata tokenIDs) public whenNotPaused onlyOwner {        
+        for (uint256 i = 0; i < tokenIDs.length; i++) {
+            require(
+                tickets[tokenIDs[i]].status == Status.ISSUED, 
+                "Ticken: Ticket already scanned or expired"
+            );
+            
+            tickets[tokenIDs[i]].status = Status.SCANNED;
+        }
+    }
+    
+
     /*********************************************************
      * getSectionTickets returns all tickets of the section
      * passed by parameters. It will return empty list if there
