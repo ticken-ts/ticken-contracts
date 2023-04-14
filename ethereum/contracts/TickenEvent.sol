@@ -159,7 +159,15 @@ contract TickenEvent is ERC721Enumerable, Pausable, Ownable {
         emit TicketTransferred(from, to, tokenID);
     }
 
-
+    /*********************************************************
+     * scanBatch mark as scaneed all tickets passed by parameter.
+     * It failes if one of the tokens is not is "issued" state.
+     *
+     * @params:
+     * - uint256[] tokenIDs -> list of all tokens to be scanned
+     *
+     * return: none
+     *********************************************************/
     function scanBatch(uint256[] calldata tokenIDs) public whenNotPaused onlyOwner {        
         for (uint256 i = 0; i < tokenIDs.length; i++) {
             require(
