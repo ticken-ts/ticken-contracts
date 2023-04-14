@@ -108,7 +108,7 @@ contract TickenEvent is ERC721Enumerable, Pausable, Ownable {
      *
      * return: none
      *********************************************************/
-    function mintTicket(address to, uint256 tokenID, string memory section) public whenNotPaused onlyOwner {
+    function mintTicket(address to, uint256 tokenID, string calldata section) public whenNotPaused onlyOwner {
         require(!_exists(tokenID), "Token ID already exists");
 
         // links the token ID (ticket ID)
@@ -159,6 +159,7 @@ contract TickenEvent is ERC721Enumerable, Pausable, Ownable {
         emit TicketTransferred(from, to, tokenID);
     }
 
+
     /*********************************************************
      * getSectionTickets returns all tickets of the section
      * passed by parameters. It will return empty list if there
@@ -169,7 +170,7 @@ contract TickenEvent is ERC721Enumerable, Pausable, Ownable {
      *
      * return: TicketDTO array
      *********************************************************/
-    function getSectionTickets(string memory section) public view returns (Ticket[] memory) {
+    function getSectionTickets(string calldata section) public view returns (Ticket[] memory) {
         uint256[] memory sectionTokenIDs = _ticketsBySection[section];
         Ticket[] memory _tickets = new Ticket[](sectionTokenIDs.length);
 
