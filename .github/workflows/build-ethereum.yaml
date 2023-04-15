@@ -13,25 +13,8 @@ jobs:
     steps:
       - name: Checkout Code
         uses: actions/checkout@v2
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v1
         with:
-          node-version: "18"
-
-      - name: Install Dependencies
-        working-directory: ./ethereum
-        run: npm install
-
-      - name: Build Smart Contract
-        working-directory: ./ethereum
-        run: npm run build
-
-      - name: Upload Artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: eth-ticken-event
-          path: ./ethereum/build/contracts/TickenEvent.json
+          path: main
 
       - name: "Checkout PUBBC Connector"
         uses: actions/checkout@v2
@@ -40,12 +23,33 @@ jobs:
           repository: ticken-ts/ticken-pubbc-connector
           path: ticken-pubbc-connector
 
+      - name: Set up Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: "18"
+
+      - name: Install Dependencies
+        working-directory: ./main/ethereum
+        run: npm install
+
+      - name: Build Smart Contract
+        working-directory: ./main/ethereum
+        run: npm run build
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: eth-ticken-event
+          path: ./main/ethereum/build/contracts/TickenEvent.json
+
       - name: Copy Contract ABI to Repository
         run: |
-          ls
+          rm ./ticken-pubbc-connector/eth-connector/TickenEvent.json
 
-          rm ./eth-connector/TickenEvent.json
-          cp ./ethereum/build/contracts/TickenEvent.json ./eth-connector/TickenEvent.json
-          git add ./eth-connector/TickenEvent.json
+          cp \
+            ./ethereum/build/contracts/TickenEvent.json  \
+            ./ticken-pubbc-connector/eth-connector/TickenEvent.json
+            
+          git add ./ticken-pubbc-connector/eth-connector/TickenEvent.json
           git commit -m "automatic ticket commit - update TicketEvent ABI"
           git push
