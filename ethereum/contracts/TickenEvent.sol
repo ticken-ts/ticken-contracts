@@ -63,7 +63,7 @@ contract TickenEvent is ERC721Enumerable, Pausable, Ownable {
     /*********************************************************/
 
 
-    constructor() ERC721("TickenEvent", "TE") {
+    constructor() ERC721("TickenEvent", "TCK") {
         _anchored = true;
     }
 
