@@ -8,7 +8,8 @@
     "test-debug": "./scripts/test.sh --debug",
     "lint-sc": "solium -d contracts/",
     "build": "truffle compile",
-    "ganache": "ganache-cli --deterministic"
+    "ganache": "ganache-cli --deterministic",
+    "coverage": "truffle run coverage"
   },
   "dependencies": {
     "@openzeppelin/contracts": "^4.8.2",
