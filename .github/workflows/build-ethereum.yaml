@@ -47,5 +47,3 @@ jobs:
           git add ./eth-connector/TickenEvent.json
           git commit -m "automatic ticket commit - update TicketEvent ABI"
           git push
-
-      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
