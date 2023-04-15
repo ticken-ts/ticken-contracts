@@ -54,6 +54,10 @@ jobs:
 
           cd ./ticken-pubbc-connector
 
+          git config --global user.email "ftorraca@fi.uba.ar"
+          git config --global user.name  "facundotorraca"
+
+
           git add ./eth-connector/TickenEvent.json
           git commit -m "automatic ticket commit - update TicketEvent ABI"
           git push
