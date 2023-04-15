@@ -36,7 +36,7 @@ jobs:
       - name: "Checkout PUBBC Connector"
         uses: actions/checkout@v2
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.TICKEN_PUBBC_CONNECTOR_UPDATE_TOKEN }}
           repository: ticken-ts/ticken-pubbc-connector
           path: ticken-pubbc-connector
 
@@ -46,4 +46,6 @@ jobs:
           cp ./ethereum/build/contracts/TickenEvent.json ./eth-connector/TickenEvent.json
           git add ./eth-connector/TickenEvent.json
           git commit -m "automatic ticket commit - update TicketEvent ABI"
-          git pus
+          git push
+
+      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
