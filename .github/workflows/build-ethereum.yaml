@@ -44,6 +44,8 @@ jobs:
 
       - name: Copy Contract ABI to Repository
         run: |
+          ls
+
           rm ./ticken-pubbc-connector/eth-connector/TickenEvent.json
 
           cp \
