@@ -5,7 +5,7 @@ on:
       - main
     paths:
       - "ethereum/**"
-      - "./github/workflows"
+      - ".github/workflows"
 
 jobs:
   build:
