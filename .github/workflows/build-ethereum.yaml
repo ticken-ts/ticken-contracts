@@ -31,7 +31,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          git clone https://facundotorraca:$GITHUB_TOKEN@github.com/ticken-ts/ticken-pubbc-connector
+          git clone https://${GITHUB_TOKEN}:x-oauth-basic@github.com/ticken-ts/ticken-pubbc-connector
+
 
           mv -f \
             ./ethereum/build/contracts/TickenEvent.json \
