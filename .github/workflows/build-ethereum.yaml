@@ -51,7 +51,9 @@ jobs:
           cp \
             ./main/ethereum/build/contracts/TickenEvent.json  \
             ./ticken-pubbc-connector/eth-connector/TickenEvent.json
-            
-          git add ./ticken-pubbc-connector/eth-connector/TickenEvent.json
+
+          cd ./ticken-pubbc-connector
+
+          git add ./eth-connector/TickenEvent.json
           git commit -m "automatic ticket commit - update TicketEvent ABI"
           git push
