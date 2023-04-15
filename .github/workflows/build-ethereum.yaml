@@ -42,6 +42,8 @@ jobs:
 
       - name: Copy Contract ABI to Repository
         run: |
+          ls
+
           rm ./eth-connector/TickenEvent.json
           cp ./ethereum/build/contracts/TickenEvent.json ./eth-connector/TickenEvent.json
           git add ./eth-connector/TickenEvent.json
