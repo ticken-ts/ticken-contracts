@@ -104,7 +104,7 @@ contract TickenEvent is ERC721Enumerable, Pausable, Ownable {
      *
      * return: none
      *********************************************************/
-    function mintTicket(address to, uint256 tokenID, string memory section) public whenNotPaused onlyOwner {
+    function mintTicket(address to, uint256 tokenID, string calldata section) public whenNotPaused onlyOwner {
         require(!_exists(tokenID), "Token ID already exists");
 
         // links the token ID (ticket ID)
