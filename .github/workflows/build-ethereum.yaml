@@ -44,8 +44,6 @@ jobs:
 
       - name: Copy Contract ABI to Repository
         run: |
-          ls
-
           rm ./ticken-pubbc-connector/eth-connector/TickenEvent.json
 
           cp \
@@ -56,7 +54,6 @@ jobs:
 
           git config --global user.email "ftorraca@fi.uba.ar"
           git config --global user.name  "facundotorraca"
-
 
           git add ./eth-connector/TickenEvent.json
           git commit -m "automatic ticket commit - update TicketEvent ABI"
