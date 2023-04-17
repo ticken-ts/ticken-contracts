@@ -25,12 +25,7 @@ contract TickenEvent is ERC721Enumerable, Pausable, Ownable {
         // ticket after it is "scanned". Important that this
         // is not  done in the same moment the scanning occurs,
         // this state is done on batch
-        SCANNED,
-
-        // TicketStatusExpired represents the state of the
-        // ticket after the event is finished and the ticket
-        // never were scanned
-        EXPIRED
+        SCANNED
     }
     /*********************************************************/
 
@@ -95,6 +90,7 @@ contract TickenEvent is ERC721Enumerable, Pausable, Ownable {
         return _ticketsCounter.current();
     }
 
+
     /*********************************************************
      * mintTicket mint a ticket for the event in the section
      * passed by parameters. It fails if there is a ticket
@@ -108,7 +104,7 @@ contract TickenEvent is ERC721Enumerable, Pausable, Ownable {
      *
      * return: none
      *********************************************************/
-    function mintTicket(address to, uint256 tokenID, string calldata section) public whenNotPaused onlyOwner {
+    function mintTicket(address to, uint256 tokenID, string memory section) public whenNotPaused onlyOwner {
         require(!_exists(tokenID), "Token ID already exists");
 
         // links the token ID (ticket ID)
@@ -116,10 +112,10 @@ contract TickenEvent is ERC721Enumerable, Pausable, Ownable {
         _safeMint(to, tokenID);
 
         tickets[tokenID] = Ticket({
-        owner: to,
-        section: section,
-        tokenID: tokenID,
-        status: Status.ISSUED
+            owner: to,
+            section: section,
+            tokenID: tokenID,
+            status: Status.ISSUED
         });
 
         _ticketsCounter.increment();
@@ -127,6 +123,7 @@ contract TickenEvent is ERC721Enumerable, Pausable, Ownable {
 
         emit TicketMinted(to, section, tokenID);
     }
+
 
     /*********************************************************
      * mintTicket mint a ticket for the event in the section
@@ -158,6 +155,7 @@ contract TickenEvent is ERC721Enumerable, Pausable, Ownable {
 
         emit TicketTransferred(from, to, tokenID);
     }
+
 
     /*********************************************************
      * scanBatch mark as scaneed all tickets passed by parameter.
@@ -200,6 +198,7 @@ contract TickenEvent is ERC721Enumerable, Pausable, Ownable {
 
         return _tickets;
     }
+
 
     /*********************************************************
      * getTicketsOwnedBy returns all tickets owned by the owner
